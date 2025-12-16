@@ -18,5 +18,4 @@ public class Principal {
         var json = consumo.obterDados(endereco + nomeDoFilme + apiKey);
         System.out.println(json);
     }
-    
 }
