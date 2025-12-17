@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public record DadosSerie(
     @JsonAlias("Type") String type,
     @JsonAlias("Title") String titulo,
-    @JsonAlias("totalSeasons") String temporadas,
+    @JsonAlias("totalSeasons") Integer temporadas,
     @JsonAlias("imdbRating") String avaliacao,
     @JsonAlias("Released") String dataLancamento 
 ) {   

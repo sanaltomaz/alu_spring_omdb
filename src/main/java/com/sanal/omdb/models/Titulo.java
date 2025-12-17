@@ -55,7 +55,7 @@ public class Titulo {
 
     public Titulo (DadosEpisodio dados) {
         this.titulo = dados.titulo();
-        this.numeroEpisodeo = dados.numero();
+        this.numeroEpisodeo = dados.episodio();
 
         try {
             this.avaliacao = Double.valueOf(dados.avaliacao());

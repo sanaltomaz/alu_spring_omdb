@@ -1,6 +1,9 @@
 package com.sanal.omdb.principal;
 
 import io.github.cdimascio.dotenv.Dotenv;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import com.sanal.omdb.services.ConsumoApi;
 import com.sanal.omdb.services.IdentificarClasse;
@@ -34,11 +37,25 @@ public class Principal {
         } else if (classe == DadosSerie.class) {
             DadosSerie dados = converte.obterDados(json, DadosSerie.class);
             Titulo titulo = new Titulo(dados);
-            System.out.println(titulo);
+            // System.out.println(titulo);
+
+            List<DadosTemporada> temporadas = new ArrayList<>();
+
+            for (int i = 1; i <= titulo.getTemporadas(); i++) {
+                json = consumo.obterDados(
+                    endereco + nomeDoFilme.replace(" ", "+") + "&season=" + i + apiKey
+                );
+                DadosTemporada dadosTemporada = converte.obterDados(json, DadosTemporada.class);
+                temporadas.add(dadosTemporada);
+            }
+            temporadas.forEach(System.out::println);
+
+
         } else if (classe == DadosEpisodio.class) {
             DadosEpisodio dados = converte.obterDados(json, DadosEpisodio.class);
             Titulo titulo = new Titulo(dados);
             System.out.println(titulo);
         }
+
     }
 }
