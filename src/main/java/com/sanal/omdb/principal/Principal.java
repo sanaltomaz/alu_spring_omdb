@@ -9,36 +9,37 @@ public class Principal {
     
     private Scanner scanner = new Scanner(System.in);
     private Funcoes Funcoes = new Funcoes();
+    private Menus menus = new Menus();
     
     private IdentificarTipo identificador = new IdentificarTipo();
 
-    public void iniciarMenu() {
-        System.out.println("Digite o nome de um Titulo: ");
-        String nomeDoFilme = scanner.nextLine();
+    public void iniciarAplicacao() {
+        menus.iniciarMenus();
+        int opcao = scanner.nextInt();
+        scanner.nextLine(); // Consumir a quebra de linha
+        try {
+            switch (opcao) {
+                case 1:
+                    System.out.println("Digite o nome de um Titulo: ");
+                    String nomeDoFilme = scanner.nextLine();
 
-        var json = Funcoes.retornarDadosTitulo(nomeDoFilme);
+                    var json = Funcoes.retornarDadosTitulo(nomeDoFilme);
 
-        Class<?> tipoClass = identificador.identificarTipo(json);
-        Object dados = new ConverteDados().obterDados(json, tipoClass);
-        System.out.println(dados);
+                    Class<?> tipoClass = identificador.identificarTipo(json);
+                    Object dados = new ConverteDados().obterDados(json, tipoClass);
+                    System.out.println(dados);
 
-        Funcoes.listarEpisodios((DadosSerie) dados);
-        // var temporadas =  Funcoes.listarEpisodios((DadosSerie) dados);
-        // Funcoes.buscarEpisodioPorNumero(temporadas, 3);
-
-        // if (classe == DadosFilme.class) {
-        //     DadosFilme dados = converte.obterDados(json, DadosFilme.class);
-        //     Titulo titulo = new Titulo(dados);
-        //     System.out.println(titulo);
-        // } else if (classe == DadosSerie.class) {
-        //     DadosSerie dados = converte.obterDados(json, DadosSerie.class);
-        //     Titulo titulo = new Titulo(dados);
-        //     System.out.println(titulo);
-        // } else if (classe == DadosEpisodio.class) {
-        //     DadosEpisodio dados = converte.obterDados(json, DadosEpisodio.class);
-        //     Titulo titulo = new Titulo(dados);
-        //     System.out.println(titulo);
-        // }
-
+                    Funcoes.listarEpisodios((DadosSerie) dados);
+                    // buscarTitulo();
+                    break;
+                case 2:
+                    System.out.println("Saindo da aplicação. Até mais!");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+        } catch (Exception e) {
+            System.out.println("Ocorreu um erro: " + e.getMessage());
+        }
     }
 }
