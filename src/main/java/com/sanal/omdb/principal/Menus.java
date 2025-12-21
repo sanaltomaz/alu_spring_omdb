@@ -13,16 +13,14 @@ public class Menus {
         System.out.print("Escolha uma opção: ");
     }
 
-    public void funcoesMenu(Class<?> tipoClass) {
-        if (tipoClass == DadosSerie.class) {
-            System.out.println("Funções disponíveis para séries:");
-            System.out.println("1. Listar episódios");
-            System.out.println("2. Exibir melhores episódios");
-            System.out.println("3. Exibir piores episódios");
-            System.out.println("4. Exibir estatísticas da série");
-            System.out.println("5. Voltar ao menu principal");
-            System.out.print("Escolha uma opção: ");
-        }
+    public void opcoesSerie() {
+        System.out.println("Funções disponíveis para séries:");
+        System.out.println("1. Listar episódios");
+        System.out.println("2. Exibir melhores episódios");
+        System.out.println("3. Exibir piores episódios");
+        System.out.println("4. Exibir estatísticas da série");
+        System.out.println("5. Voltar ao menu principal");
+        System.out.print("Escolha uma opção: ");
     }
 
     public void funcoesMenuSerie(DadosSerie serie, int opcao) {

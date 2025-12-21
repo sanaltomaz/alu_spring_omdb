@@ -32,17 +32,17 @@ public class Funcoes {
         }
 
         return temporadas;
-        // temporadas.forEach(System.out::println);
     }
 
     public void listarMelhoresEpisodios(DadosSerie serie) {
+        System.out.println("Listando melhores episódios...");
+
         var temporadas = listarEpisodios(serie);
+
         List<DadosEpisodio> dadosEpisodio = temporadas.stream()
             .flatMap(t -> t.episodios().stream())
             .collect(Collectors.toList());
 
-        System.out.println("Listando melhores episódios...");
-        // Implementar a lógica para listar os melhores episódios aqui
         dadosEpisodio.stream()
             .filter(e -> !e.avaliacao().equals("N/A"))
             .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
@@ -52,14 +52,13 @@ public class Funcoes {
 
     public void listarPioresEpisodios(DadosSerie serie) {
         System.out.println("Listando piores episódios...");
-        // Implementar a lógica para listar os piores episódios aqui
+
         var temporadas = listarEpisodios(serie);
+
         List<DadosEpisodio> dadosEpisodio = temporadas.stream()
             .flatMap(t -> t.episodios().stream())
             .collect(Collectors.toList());
 
-        System.out.println("Listando melhores episódios...");
-        // Implementar a lógica para listar os melhores episódios aqui
         dadosEpisodio.stream()
             .filter(e -> !e.avaliacao().equals("N/A"))
             .sorted(Comparator.comparing(DadosEpisodio::avaliacao))
@@ -69,8 +68,9 @@ public class Funcoes {
 
     public void exibirEstatisticasSerie(DadosSerie serie) {
         System.out.println("Exibindo estatísticas da série: " + serie.titulo());
-        // Implementar a lógica para exibir estatísticas da série aqui
+
         var temporadas = listarEpisodios(serie);
+
         List<Titulo> episodios = temporadas.stream()
                 .flatMap(t -> t.episodios().stream()
                         .map(d -> new Titulo(d)))
@@ -79,6 +79,7 @@ public class Funcoes {
         DoubleSummaryStatistics est = episodios.stream()
                 .filter(e -> e.getAvaliacao() > 0.0)
                 .collect(Collectors.summarizingDouble(Titulo::getAvaliacao));
+
         System.out.println("Média: " + est.getAverage());
         System.out.println("Melhor episódio: " + est.getMax());
         System.out.println("Pior episódio: " + est.getMin());

@@ -19,27 +19,31 @@ public class Principal {
     public void iniciarAplicacao() {
         menus.iniciarMenus();
         int opcao = scanner.nextInt();
-        scanner.nextLine(); // Consumir a quebra de linha
+        scanner.nextLine(); 
+
         try {
             switch (opcao) {
                 case 1:
                     System.out.println("Digite o nome de um Titulo: ");
-                    String nomeDoFilme = scanner.nextLine();
+                    String nomeTitulo = scanner.nextLine();
 
-                    var json = converte.retornarDadosTitulo(nomeDoFilme);
+                    var json = converte.retornarDadosTitulo(nomeTitulo);
 
                     Class<?> tipoClass = identificador.identificarTipo(json);
                     Object dados = new ConverteDados().obterDados(json, tipoClass);
-                    // System.out.println(dados);
 
-                    if (tipoClass == DadosSerie.class) {
-                        menus.funcoesMenu(DadosSerie.class);
-                        int opcaoSerie = scanner.nextInt();
-                        scanner.nextLine(); 
-                        menus.funcoesMenuSerie((DadosSerie) dados, opcaoSerie);
-                    } else if (tipoClass == DadosFilme.class) {
+                    if (dados instanceof DadosSerie) {
+                        menus.opcoesSerie();
+                        int escolha = scanner.nextInt();
+                        scanner.nextLine();
+                        menus.funcoesMenuSerie((DadosSerie) dados, escolha);
+                    } else if (dados instanceof DadosFilme) {
                         System.out.println((DadosFilme) dados);
+                    } else {
+                        System.out.println("Tipo de título desconhecido.");
                     }
+
+                    break;
                 case 2:
                     System.out.println("Saindo da aplicação. Até mais!");
                     break;
