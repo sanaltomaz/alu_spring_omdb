@@ -14,7 +14,5 @@ public class OmdbApplication {
 		Principal principal = new Principal();
 
 		principal.iniciarAplicacao();
-		// ConsumoGPT consumoGPT = new ConsumoGPT();
-		// consumoGPT.obterTraducao("You exceeded your current quota, please check your plan and billing details.");
 	}
 }

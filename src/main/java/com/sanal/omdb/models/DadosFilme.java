@@ -12,12 +12,4 @@ public record DadosFilme(
     @JsonAlias("Released") String dataLancamento,
     @JsonAlias("Plot") String sinapse
 ) {
-    @Override
-    public String toString() {
-        return "\nTítulo: " + titulo + "\n" +
-               "Duração: " + duracao + "\n" +
-               "Avaliação IMDb: " + avaliacao + "\n" +
-               "Data de Lançamento: " + dataLancamento + "\n" + 
-                "Sinapse: " + sinapse;
-    }
-}
+} 

@@ -2,13 +2,10 @@ package com.sanal.omdb.models;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
-// import com.sanal.omdb.models.*;
-// import com.sanal.omdb.services.identificarClasse;
 
 import com.sanal.omdb.services.ConsumoGPT;
 
 public class Titulo {
-    
     private String type;
     private String titulo;
     private Integer temporadas;
@@ -17,8 +14,6 @@ public class Titulo {
     private Double avaliacao;
     private LocalDate dataLancamento;
     private String sinapse;
-
-    // private ConsumoGPT consumoGPT = new ConsumoGPT();
 
     public Titulo (DadosFilme dados) {
         this.type = dados.type();
@@ -93,11 +88,35 @@ public class Titulo {
 
     @Override
     public String toString() {
-        return "Titulo: " + titulo + 
-                ", Tipo: " + type +
-                ", Avaliação: " + avaliacao + 
-                ", Lançamento: " + dataLancamento + 
-                ", Sinapse: " + sinapse;
+    
+        if ("movie".equalsIgnoreCase(type)) {
+            return """
+                Filme: %s
+                Avaliação: %.1f
+                Duração: %.0f min
+                Lançamento: %s
+                Sinopse: %s
+                """.formatted(titulo, avaliacao, duracao, dataLancamento, sinapse);
+        }
+    
+        if ("series".equalsIgnoreCase(type)) {
+            return """
+                Série: %s
+                Temporadas: %d
+                Avaliação: %.1f
+                Lançamento: %s
+                Sinopse: %s
+                """.formatted(titulo, temporadas, avaliacao, dataLancamento, sinapse);
+        }
+    
+        if (numeroEpisodeo != null) {
+            return """
+                Episódio: %s
+                Número: %d
+                Avaliação: %.1f
+                """.formatted(titulo, numeroEpisodeo, avaliacao);
+        }
+    
+        return titulo;
     }
-
 }

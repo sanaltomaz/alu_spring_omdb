@@ -5,6 +5,7 @@ import com.sanal.omdb.services.IdentificarTipo;
 import com.sanal.omdb.services.RetornoDados;
 import com.sanal.omdb.models.DadosFilme;
 import com.sanal.omdb.models.DadosSerie;
+import com.sanal.omdb.models.Titulo;
 import com.sanal.omdb.services.ConverteDados;
 
 public class Principal {
@@ -38,7 +39,8 @@ public class Principal {
                         scanner.nextLine();
                         menus.funcoesMenuSerie((DadosSerie) dados, escolha);
                     } else if (dados instanceof DadosFilme) {
-                        System.out.println((DadosFilme) dados);
+                        Titulo t = new Titulo((DadosFilme) dados);
+                        System.out.println(t);
                     } else {
                         System.out.println("Tipo de título desconhecido.");
                     }

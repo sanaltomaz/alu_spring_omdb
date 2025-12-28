@@ -11,12 +11,5 @@ public record DadosSerie(
     @JsonAlias("imdbRating") String avaliacao,
     @JsonAlias("Released") String dataLancamento,
     @JsonAlias("Plot") String sinapse
-) {   
-    @Override
-    public String toString() {
-        return "Título: " + titulo + "\n" +
-               "Total de Temporadas: " + temporadas + "\n" +
-               "Avaliação IMDb: " + avaliacao + "\n" + 
-                "Sinapse: " + sinapse;
-    }
-}
+) {  
+} 

@@ -8,22 +8,31 @@ import com.openai.models.chat.completions.ChatCompletionCreateParams;
 public class ConsumoGPT {
     public static String obterTraducao(String texto) {
 
-        OpenAIClient client = OpenAIOkHttpClient.fromEnv();
+        if (texto == null || texto.isBlank() || texto.equals("N/A")) {
+            return texto;
+        }
 
-        ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
-                .model("gpt-5-nano")
-                .addUserMessage("Traduza para o português: " + texto)
-                .build();
+        try {
+            OpenAIClient client = OpenAIOkHttpClient.fromEnv();
 
-        ChatCompletion chatCompletion = client.chat() 
-                .completions()
-                .create(params);
+            ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
+                    .model("gpt-5-mini")
+                    .addUserMessage("Traduza para o português o seguinte texto, preservando nomes próprios: " + texto)
+                    .build();
 
-        return chatCompletion.choices()
-                .get(0)
-                .message()
-                .content()
-                .orElse("");
+            ChatCompletion chatCompletion = client.chat()
+                    .completions()
+                    .create(params);
+
+            return chatCompletion.choices()
+                    .get(0)
+                    .message()
+                    .content()
+                    .orElse(texto);
+        } catch (Exception e) {
+            System.err.println("Erro ao chamar o GPT para tradução: " + e.getMessage());
+            return texto;
+        }
     }
 }
 
