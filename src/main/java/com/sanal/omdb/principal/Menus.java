@@ -61,11 +61,12 @@ public class Menus {
 
     public void opcoesSerie(DadosSerie serie) {
         System.out.println("Funções disponíveis para séries:");
-        System.out.println("1. Listar episódios");
-        System.out.println("2. Exibir melhores episódios");
-        System.out.println("3. Exibir piores episódios");
-        System.out.println("4. Exibir estatísticas da série");
-        System.out.println("5. Voltar ao menu principal");
+        System.out.println("1. Apresentar série");
+        System.out.println("2. Listar episódios");
+        System.out.println("3. Exibir melhores episódios");
+        System.out.println("4. Exibir piores episódios");
+        System.out.println("5. Exibir estatísticas da série");
+        System.out.println("6. Voltar ao menu principal");
         System.out.print("Escolha uma opção: ");
         
         int escolha = scanner.nextInt();
@@ -73,18 +74,22 @@ public class Menus {
 
         switch (escolha) {
             case 1:
-                funcoes.listarEpisodios(serie).forEach(System.out::println);
+                Titulo tituloSerie = new Titulo(serie);
+                System.out.println(tituloSerie);
                 break;
             case 2:
-                funcoes.listarMelhoresEpisodios(serie);
+                funcoes.listarEpisodios(serie).forEach(System.out::println);
                 break;
             case 3:
-                funcoes.listarPioresEpisodios(serie);
+                funcoes.listarMelhoresEpisodios(serie);
                 break;
             case 4:
-                funcoes.exibirEstatisticasSerie(serie);
+                funcoes.listarPioresEpisodios(serie);
                 break;
             case 5:
+                funcoes.exibirEstatisticasSerie(serie);
+                break;
+            case 6:
                 System.out.println("Voltando ao menu principal...");
                 break;
             default:
