@@ -23,7 +23,7 @@ public class ConsumoGPT {
             ChatCompletion chatCompletion = client.chat()
                     .completions()
                     .create(params);
-
+ 
             return chatCompletion.choices()
                     .get(0)
                     .message()

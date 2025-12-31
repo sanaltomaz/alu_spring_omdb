@@ -1,19 +1,65 @@
 package com.sanal.omdb.principal;
 
+import java.util.Scanner;
 
 import com.sanal.omdb.models.*;
+import com.sanal.omdb.services.ConverteDados;
+import com.sanal.omdb.services.IdentificarTipo;
+import com.sanal.omdb.services.RetornoDados;
 
 public class Menus {
     private Funcoes funcoes = new Funcoes();
+    private Scanner scanner = new Scanner(System.in);
+    private IdentificarTipo identificador = new IdentificarTipo();
+    private RetornoDados converte = new RetornoDados();
 
-    public void iniciarMenus() {
+    int opcao = -1;
+    
+    public void iniciarMenu() {
+        while (opcao != 0) {
+            menuInicial();
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1:
+                    System.out.println("Nome do título: ");
+                    String nomeTitulo = scanner.nextLine();
+
+                    var json = converte.retornarDadosTitulo(nomeTitulo);
+
+                    Class<?> tipoClass = identificador.identificarTipo(json);
+                    Object dados = new ConverteDados().obterDados(json, tipoClass);
+
+                    if (dados instanceof DadosSerie) {
+                        opcoesSerie((DadosSerie) dados);
+                    } else if (dados instanceof DadosFilme) {
+                        Titulo t = new Titulo((DadosFilme) dados);
+                        System.out.println(t);
+                    } else {
+                        System.out.println("Tipo de título desconhecido.");
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("Saindo da aplicação. Até mais!");
+                    opcao = 0;
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+            }
+        }
+    }
+
+    public void menuInicial() {
         System.out.println("Bem-vindo ao sistema OMDB!");
         System.out.println("1. Buscar Título");
         System.out.println("2. Sair");
         System.out.print("Escolha uma opção: ");
     }
 
-    public void opcoesSerie() {
+    public void opcoesSerie(DadosSerie serie) {
         System.out.println("Funções disponíveis para séries:");
         System.out.println("1. Listar episódios");
         System.out.println("2. Exibir melhores episódios");
@@ -21,10 +67,11 @@ public class Menus {
         System.out.println("4. Exibir estatísticas da série");
         System.out.println("5. Voltar ao menu principal");
         System.out.print("Escolha uma opção: ");
-    }
+        
+        int escolha = scanner.nextInt();
+        scanner.nextLine();
 
-    public void funcoesMenuSerie(DadosSerie serie, int opcao) {
-        switch (opcao) {
+        switch (escolha) {
             case 1:
                 funcoes.listarEpisodios(serie).forEach(System.out::println);
                 break;
