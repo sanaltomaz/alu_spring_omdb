@@ -164,6 +164,11 @@ public class OmdbClient {
             if (tipo.equals(DadosSerie.class)) {
                 return mapper.readValue(json, DadosSerie.class);
             }
+
+            if (tipo.equals(DadosEpisodio.class)) {
+                return mapper.readValue(json, DadosEpisodio.class);
+            }
+            
         } catch (Exception e) {
             throw new RuntimeException(
                     "Erro ao converter JSON para objeto: " + e.getMessage(),

@@ -28,6 +28,15 @@ public class TituloService {
      * - Regras de apresentação
      */
     public Titulo buscarPorNome(String nome) {
-        return null;
+        Object dados = omdbClient.buscarTitulo(nome);
+        if (dados instanceof com.sanal.omdb.dto.omdb.DadosFilme) {
+            return tituloFactory.fromFilme((com.sanal.omdb.dto.omdb.DadosFilme) dados, null);
+        } else if (dados instanceof com.sanal.omdb.dto.omdb.DadosSerie) {
+            return tituloFactory.fromSerie((com.sanal.omdb.dto.omdb.DadosSerie) dados, null);
+        } else if (dados instanceof com.sanal.omdb.dto.omdb.DadosEpisodio) {
+            return tituloFactory.fromEpisodio((com.sanal.omdb.dto.omdb.DadosEpisodio) dados);
+        } else {
+            return null;
+        }
     }
 }
