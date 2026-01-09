@@ -3,6 +3,9 @@ package com.sanal.omdb.services;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+import com.sanal.omdb.dto.omdb.DadosEpisodio;
+import com.sanal.omdb.dto.omdb.DadosFilme;
+import com.sanal.omdb.dto.omdb.DadosSerie;
 import com.sanal.omdb.models.*;
 
 public class TituloFactory {

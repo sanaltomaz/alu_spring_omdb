@@ -6,6 +6,9 @@ import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.sanal.omdb.dto.omdb.DadosEpisodio;
+import com.sanal.omdb.dto.omdb.DadosSerie;
+import com.sanal.omdb.dto.omdb.DadosTemporada;
 import com.sanal.omdb.models.*;
 
 import com.sanal.omdb.services.ConverteDados;

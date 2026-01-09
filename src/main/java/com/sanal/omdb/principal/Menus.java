@@ -2,6 +2,8 @@ package com.sanal.omdb.principal;
 
 import java.util.Scanner;
 
+import com.sanal.omdb.dto.omdb.DadosFilme;
+import com.sanal.omdb.dto.omdb.DadosSerie;
 import com.sanal.omdb.models.*;
 import com.sanal.omdb.services.ConverteDados;
 import com.sanal.omdb.services.IdentificarTipo;

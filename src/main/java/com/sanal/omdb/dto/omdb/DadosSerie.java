@@ -1,4 +1,4 @@
-package com.sanal.omdb.models;
+package com.sanal.omdb.dto.omdb;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

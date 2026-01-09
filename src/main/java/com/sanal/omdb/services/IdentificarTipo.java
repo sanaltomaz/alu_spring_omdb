@@ -1,6 +1,8 @@
 package com.sanal.omdb.services;
 
-import com.sanal.omdb.models.*;
+import com.sanal.omdb.dto.omdb.DadosEpisodio;
+import com.sanal.omdb.dto.omdb.DadosFilme;
+import com.sanal.omdb.dto.omdb.DadosSerie;
 
 public class IdentificarTipo {
     public Class<?> identificarTipo (String json) {
