@@ -2,6 +2,7 @@ package com.sanal.omdb;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 import com.sanal.omdb.models.Titulo;
 import com.sanal.omdb.omdb.OmdbClient;
@@ -14,8 +15,8 @@ import com.sanal.omdb.services.TituloFactory;
 public class OmdbApplication {
 	
 	public static void main(String[] args) {
-		SpringApplication.run(OmdbApplication.class, args);
-		OmdbClient client = new OmdbClient();
+		ApplicationContext context = SpringApplication.run(OmdbApplication.class, args);
+		OmdbClient client = context.getBean(OmdbClient.class);
 
 		Titulo t = new TituloFactory().fromFilme((DadosFilme) client.buscarTitulo("Inception"), null);
 		System.out.println(t);
