@@ -2,6 +2,20 @@ package com.sanal.omdb.models;
 
 import java.time.LocalDate;
 
+/**
+ * Entidade de domínio que representa um título da aplicação.
+ *
+ * Pode assumir três formas:
+ * - Filme
+ * - Série
+ * - Episódio
+ *
+ * Esta classe faz parte do núcleo do domínio e não possui
+ * dependências com APIs externas, DTOs ou lógica de apresentação.
+ *
+ * Todos os dados recebidos por este objeto já devem estar
+ * tratados e convertidos antes da sua criação.
+ */
 public class Titulo {
 
     private final TipoTitulo tipo;
@@ -13,6 +27,13 @@ public class Titulo {
     private final LocalDate dataLancamento;
     private final String sinopse;
 
+    /**
+     * Construtor principal do domínio.
+     *
+     * Observação:
+     * Alguns campos podem ser nulos dependendo do tipo do título
+     * (ex: duração para séries, temporadas para filmes).
+     */
     public Titulo(
             TipoTitulo tipo,
             String titulo,
@@ -65,6 +86,13 @@ public class Titulo {
         return sinopse;
     }
 
+    /**
+     * Representação textual do título.
+     *
+     * Método utilizado apenas para fins de CLI e debug.
+     * Em aplicações web, a formatação deve ser responsabilidade
+     * da camada de apresentação.
+     */
     @Override
     public String toString() {
         return switch (tipo) {
