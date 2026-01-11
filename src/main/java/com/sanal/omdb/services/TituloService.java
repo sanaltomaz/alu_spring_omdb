@@ -19,15 +19,15 @@ import com.sanal.omdb.omdb.OmdbClient;
  * - Decidir quais dados externos devem ser buscados
  * - Converter dados externos (DTOs) em objetos de domínio
  *
+ * Este service atua como a camada de aplicação entre:
+ * - Integração externa (OMDB)
+ * - Núcleo do domínio
+ *
  * O que este service NÃO faz:
  * - Não realiza chamadas HTTP diretamente
  * - Não converte JSON manualmente
  * - Não executa lógica de análise ou estatísticas
  * - Não imprime dados nem interage com o usuário
- *
- * Observação:
- * Este service representa o ponto central entre integração externa
- * (OMDB) e o domínio da aplicação.
  */
 @Service
 public class TituloService {
@@ -44,13 +44,13 @@ public class TituloService {
      *
      * Responsabilidade:
      * - Delegar a busca de dados externos ao OmdbClient
-     * - Identificar o tipo técnico retornado (filme, série ou episódio)
+     * - Identificar o tipo técnico retornado (filme ou série)
      * - Criar o objeto de domínio apropriado através da factory
      *
      * Observações:
-     * - O uso de instanceof é intencional e temporário
-     * - A lógica de decisão fica centralizada neste service
-     * - O restante da aplicação não conhece DTOs externos
+     * - O uso de instanceof é intencional neste momento
+     * - Evita que o domínio conheça DTOs externos
+     * - Esta lógica poderá evoluir para um mecanismo mais explícito no futuro
      */
     public Titulo buscarPorNome(String nome) {
         Object dados = omdbClient.buscarTitulo(nome);
@@ -78,7 +78,7 @@ public class TituloService {
      * Responsabilidade:
      * - Delegar diretamente a consulta ao OmdbClient
      *
-     * Observação:
+     * Observações:
      * - Não busca temporadas nem episódios
      * - Método leve, útil para consultas simples
      */
@@ -93,7 +93,7 @@ public class TituloService {
      * - Encapsular a chamada ao OmdbClient
      * - Fornecer acesso pontual a uma temporada
      *
-     * Observação:
+     * Observações:
      * - Não realiza agregação de dados
      * - Não conhece o contexto completo da série
      */
@@ -106,13 +106,13 @@ public class TituloService {
      *
      * Responsabilidade:
      * - Orquestrar múltiplas chamadas à OMDB
-     * - Agregar os dados da série e de suas temporadas
-     * - Retornar um DTO agregado pronto para análise
+     * - Agregar metadados da série e dados de todas as temporadas
+     * - Retornar um DTO agregado pronto para consumo por serviços de análise
      *
      * Observações:
-     * - Este método pode ser custoso (múltiplas chamadas HTTP)
-     * - Não realiza análise ou estatísticas
-     * - Serve como base para o SerieAnaliseService
+     * - Este método é custoso (uma chamada HTTP por temporada)
+     * - Deve ser usado com cautela em fluxos interativos
+     * - Lança exceção caso o título informado não seja uma série
      */
     public OmdbSerieCompletaDto buscarSerieComEpisodios(String nome) {
         OmdbSerieDto serie = buscarSerie(nome);
@@ -120,9 +120,8 @@ public class TituloService {
         if (serie == null || serie.temporadas() == null) {
             throw new IllegalStateException("Título não é uma série");
         }
-        
-        int totalTemporadas = serie.temporadas();
 
+        int totalTemporadas = serie.temporadas();
         List<OmdbTemporadaDto> temporadas = new ArrayList<>();
 
         for (int i = 1; i <= totalTemporadas; i++) {

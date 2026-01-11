@@ -12,16 +12,19 @@ import com.sanal.omdb.dto.omdb.OmdbSerieDto;
 /**
  * Service responsável por análises e consultas sobre séries e episódios.
  *
- * Responsabilidades:
- * - Ordenar episódios
- * - Filtrar por avaliação
- * - Calcular estatísticas
+ * Papel desta classe:
+ * - Trabalhar exclusivamente com dados já obtidos da OMDB
+ * - Aplicar regras de ordenação e filtragem
+ * - Preparar listas de episódios para consumo externo
  *
- * NÃO faz:
- * - Chamada HTTP
- * - Conversão de JSON
- * - Impressão em console
- * - Leitura de input
+ * Este service atua após a obtenção completa dos dados da série,
+ * utilizando o {@link TituloService} como fonte.
+ *
+ * O que este service NÃO faz:
+ * - Não realiza chamadas HTTP
+ * - Não converte JSON
+ * - Não cria objetos de domínio
+ * - Não imprime dados nem interage com o usuário
  */
 @Service
 public class SerieAnaliseService {
@@ -31,22 +34,42 @@ public class SerieAnaliseService {
     public SerieAnaliseService(TituloService tituloService) {
         this.tituloService = tituloService;
     }
+
     /**
-     * Retorna todos os episódios da série.
-     * A forma de obtenção (temporadas, cache, etc.)
-     * é responsabilidade deste service.
+     * Carrega todos os dados de uma série, incluindo temporadas e episódios.
+     *
+     * Responsabilidade:
+     * - Delegar ao TituloService a obtenção completa da série
+     *
+     * Observação:
+     * - Método interno utilizado como base para análises
+     * - Pode ser custoso (múltiplas chamadas externas)
      */
     private OmdbSerieCompletaDto carregarSerieCompleta(String nome) {
         return tituloService.buscarSerieComEpisodios(nome);
     }
 
+    /**
+     * Retorna todos os episódios da série, organizados por temporada.
+     *
+     * Observação:
+     * - Não aplica filtros ou ordenações
+     * - Útil para listagens completas
+     */
     public OmdbSerieCompletaDto listarTodosEpisodios(String nome) {
         return carregarSerieCompleta(nome);
     }
 
     /**
-     * Retorna os melhores episódios da série,
-     * ordenados por avaliação (decrescente).
+     * Retorna os melhores episódios da série.
+     *
+     * Critérios:
+     * - Episódios com avaliação diferente de "N/A"
+     * - Ordenação por avaliação em ordem decrescente
+     * - Limite máximo de resultados configurável
+     *
+     * Observação:
+     * - Avaliações são tratadas como valores numéricos apenas neste ponto
      */
     public List<OmdbEpisodioDto> melhoresEpisodios(OmdbSerieDto serie, int limite) {
 
@@ -67,8 +90,12 @@ public class SerieAnaliseService {
     }
 
     /**
-     * Retorna os piores episódios da série,
-     * ordenados por avaliação (crescente).
+     * Retorna os piores episódios da série.
+     *
+     * Critérios:
+     * - Episódios com avaliação diferente de "N/A"
+     * - Ordenação por avaliação em ordem crescente
+     * - Limite máximo de resultados configurável
      */
     public List<OmdbEpisodioDto> pioresEpisodios(OmdbSerieDto serie, int limite) {
 
