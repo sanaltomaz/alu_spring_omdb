@@ -16,8 +16,6 @@ public class Menus {
     private final SerieAnaliseService serieAnalise;
     private final Scanner scanner = new Scanner(System.in);
 
-    int opcao = -1;
-    
     public Menus(
         TituloService tituloService,
         SerieAnaliseService serieAnalise
@@ -25,76 +23,106 @@ public class Menus {
         this.tituloService = tituloService;
         this.serieAnalise = serieAnalise;
     }
-    
+
     public void iniciarMenu() {
+        int opcao = -1;
+
         while (opcao != 0) {
-            menuInicial();
-            opcao = scanner.nextInt();
-            scanner.nextLine();
+            exibirMenuInicial();
+            opcao = lerOpcao();
 
             switch (opcao) {
-                case 1:
-                    System.out.println("Nome do título: ");
-                    String nomeTitulo = scanner.nextLine();
-                    
-                    try {
-                        Titulo serie = tituloService.buscarPorNome(nomeTitulo);
-                        if (serie != null) {
-                            OmdbSerieDto s = tituloService.buscarSerie(nomeTitulo);
-                            opcoesSerie(s);
-                        } else {
-                            System.out.println("Título não encontrado.");
-                        }
-                        break;
-                    } catch (Exception e) {
-                        Titulo filme = tituloService.buscarPorNome(nomeTitulo);
-                        System.out.println(filme);
-                    }
-                    
-                case 2:
-                    System.out.println("Saindo da aplicação. Até mais!");
+                case 1 -> buscarTitulo();
+                case 2 -> {
+                    encerrar();
                     opcao = 0;
-                    break;
-                default:
-                    System.out.println("Opção inválida. Tente novamente.");
-                    break;
-            }
+                }
+    default -> System.out.println("Opção inválida.");
+}
+
         }
     }
 
-    public void menuInicial() {
-        System.out.println("Bem-vindo ao sistema OMDB!");
-        System.out.println("1. Buscar Título");
+    private void exibirMenuInicial() {
+        System.out.println("\n=== OMDB ===");
+        System.out.println("1. Buscar título");
         System.out.println("2. Sair");
         System.out.print("Escolha uma opção: ");
     }
 
-    public void opcoesSerie(OmdbSerieDto serie) {
-        System.out.println("\nFunções disponíveis para séries:");
-        System.out.println("1. Listar episódios");
-        System.out.println("2. Exibir melhores episódios");
-        System.out.println("3. Exibir piores episódios");
-        System.out.println("4. Voltar ao menu principal");
-        System.out.print("Escolha uma opção: ");
-        
-        int escolha = scanner.nextInt();
+    private int lerOpcao() {
+        int opcao = scanner.nextInt();
         scanner.nextLine();
+        return opcao;
+    }
 
-        switch (escolha) {
-            case 1:
-                System.out.println(serieAnalise.listarTodosEpisodios(serie.titulo()));
-                break;
-            case 2:
-                System.out.println(serieAnalise.melhoresEpisodios(serie, 5));
-                break;
-            case 3:
-                System.out.println(serieAnalise.pioresEpisodios(serie, 5));
-                break;
-            case 4:
-                System.out.println("Voltando ao menu principal...");
-                break;
-            default:
-                System.out.println("Opção inválida. Tente novamente.");
+    private void buscarTitulo() {
+        System.out.print("\nNome do título: ");
+        String nome = scanner.nextLine();
+
+        Titulo titulo = tituloService.buscarPorNome(nome);
+
+        if (titulo == null) {
+            System.out.println("Título não encontrado.");
+            return;
         }
+
+        // Se chegou aqui, existe título
+        OmdbSerieDto serie = tituloService.buscarSerie(nome);
+
+        if (serie != null && "series".equalsIgnoreCase(serie.type())) {
+            menuSerie(serie);
+        } else {
+            System.out.println(titulo);
+        }
+
+    }
+
+    private void menuSerie(OmdbSerieDto serie) {
+        int opcao = -1;
+
+        while (opcao != 0) {
+            exibirMenuSerie(serie);
+            opcao = lerOpcao();
+
+            switch (opcao) {
+                case 1 -> listarEpisodios(serie);
+                case 2 -> listarMelhoresEpisodios(serie);
+                case 3 -> listarPioresEpisodios(serie);
+                case 0 -> System.out.println("Voltando ao menu principal...");
+                default -> System.out.println("Opção inválida.");
+            }
+        }
+    }
+
+    private void exibirMenuSerie(OmdbSerieDto serie) {
+        System.out.println("\n=== Série: " + serie.titulo() + " ===");
+        System.out.println("1. Listar episódios");
+        System.out.println("2. Melhores episódios");
+        System.out.println("3. Piores episódios");
+        System.out.println("0. Voltar");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    private void listarEpisodios(OmdbSerieDto serie) {
+        System.out.println(
+            serieAnalise.listarTodosEpisodios(serie.titulo())
+        );
+    }
+
+    private void listarMelhoresEpisodios(OmdbSerieDto serie) {
+        serieAnalise
+            .melhoresEpisodios(serie, 5)
+            .forEach(System.out::println);
+    }
+
+    private void listarPioresEpisodios(OmdbSerieDto serie) {
+        serieAnalise
+            .pioresEpisodios(serie, 5)
+            .forEach(System.out::println);
+    }
+
+    private void encerrar() {
+        System.out.println("Saindo da aplicação. Até mais!");
     }
 }
