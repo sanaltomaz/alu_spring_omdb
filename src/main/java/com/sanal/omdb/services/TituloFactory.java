@@ -1,7 +1,9 @@
 package com.sanal.omdb.services;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 import com.sanal.omdb.dto.omdb.OmdbEpisodioDto;
 import com.sanal.omdb.dto.omdb.OmdbFilmeDto;
@@ -9,6 +11,9 @@ import com.sanal.omdb.dto.omdb.OmdbSerieDto;
 import com.sanal.omdb.models.*;
 
 public class TituloFactory {
+
+    private static final DateTimeFormatter OMDB_DATE_FORMAT =
+        DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
 
     public Titulo fromFilme(OmdbFilmeDto dados, String sinopseTraduzida) {
         return new Titulo(
@@ -49,25 +54,37 @@ public class TituloFactory {
         );
     }
 
-    private Double parseAvaliacao(String valor) {
-        try {
-            return Double.valueOf(valor);
-        } catch (Exception e) {
-            return 0.0;
+    private Double parseAvaliacao(String avaliacao) {
+        if (avaliacao == null || avaliacao.equalsIgnoreCase("N/A")) {
+            return null;
         }
-    }
 
-    private Double parseDuracao(String valor) {
         try {
-            return Double.valueOf(valor.replace(" min", ""));
+            return Double.valueOf(avaliacao);
         } catch (Exception e) {
             return null;
         }
     }
 
-    private LocalDate parseData(String valor) {
+    private Double parseDuracao(String duracao) {
+        if (duracao == null || duracao.equalsIgnoreCase("N/A")) {
+            return null;
+        }
+
         try {
-            return LocalDate.parse(valor);
+            return Double.valueOf(duracao.replace(" min", "").trim());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private LocalDate parseData(String dataLancamento) {
+        if (dataLancamento == null || dataLancamento.isBlank() || dataLancamento.equalsIgnoreCase("N/A")) {
+            return null;
+        }
+
+        try {
+            return LocalDate.parse(dataLancamento, OMDB_DATE_FORMAT);
         } catch (DateTimeParseException e) {
             return null;
         }
