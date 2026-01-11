@@ -2,21 +2,29 @@ package com.sanal.omdb.principal;
 
 import java.util.Scanner;
 
-import com.sanal.omdb.dto.omdb.DadosFilme;
-import com.sanal.omdb.dto.omdb.DadosSerie;
-import com.sanal.omdb.models.*;
-import com.sanal.omdb.services.ConverteDados;
-import com.sanal.omdb.services.IdentificarTipo;
-import com.sanal.omdb.services.RetornoDados;
-import com.sanal.omdb.services.TituloFactory;
+import org.springframework.stereotype.Component;
 
+import com.sanal.omdb.dto.omdb.OmdbSerieDto;
+import com.sanal.omdb.models.Titulo;
+import com.sanal.omdb.services.SerieAnaliseService;
+import com.sanal.omdb.services.TituloService;
+
+@Component
 public class Menus {
-    private Funcoes funcoes = new Funcoes();
-    private Scanner scanner = new Scanner(System.in);
-    private IdentificarTipo identificador = new IdentificarTipo();
-    private RetornoDados converte = new RetornoDados();
+
+    private final TituloService tituloService;
+    private final SerieAnaliseService serieAnalise;
+    private final Scanner scanner = new Scanner(System.in);
 
     int opcao = -1;
+    
+    public Menus(
+        TituloService tituloService,
+        SerieAnaliseService serieAnalise
+    ) {
+        this.tituloService = tituloService;
+        this.serieAnalise = serieAnalise;
+    }
     
     public void iniciarMenu() {
         while (opcao != 0) {
@@ -28,22 +36,21 @@ public class Menus {
                 case 1:
                     System.out.println("Nome do título: ");
                     String nomeTitulo = scanner.nextLine();
-
-                    var json = converte.retornarDadosTitulo(nomeTitulo);
-
-                    Class<?> tipoClass = identificador.identificarTipo(json);
-                    Object dados = new ConverteDados().obterDados(json, tipoClass);
-
-                    if (dados instanceof DadosSerie) {
-                        opcoesSerie((DadosSerie) dados);
-                    } else if (dados instanceof DadosFilme) {
-                        Titulo t = new TituloFactory().fromFilme((DadosFilme) dados, null);
-                        System.out.println(t);
-                    } else {
-                        System.out.println("Tipo de título desconhecido.");
+                    
+                    try {
+                        Titulo serie = tituloService.buscarPorNome(nomeTitulo);
+                        if (serie != null) {
+                            OmdbSerieDto s = tituloService.buscarSerie(nomeTitulo);
+                            opcoesSerie(s);
+                        } else {
+                            System.out.println("Título não encontrado.");
+                        }
+                        break;
+                    } catch (Exception e) {
+                        Titulo filme = tituloService.buscarPorNome(nomeTitulo);
+                        System.out.println(filme);
                     }
-                    break;
-
+                    
                 case 2:
                     System.out.println("Saindo da aplicação. Até mais!");
                     opcao = 0;
@@ -62,14 +69,12 @@ public class Menus {
         System.out.print("Escolha uma opção: ");
     }
 
-    public void opcoesSerie(DadosSerie serie) {
-        System.out.println("Funções disponíveis para séries:");
-        System.out.println("1. Apresentar série");
-        System.out.println("2. Listar episódios");
-        System.out.println("3. Exibir melhores episódios");
-        System.out.println("4. Exibir piores episódios");
-        System.out.println("5. Exibir estatísticas da série");
-        System.out.println("6. Voltar ao menu principal");
+    public void opcoesSerie(OmdbSerieDto serie) {
+        System.out.println("\nFunções disponíveis para séries:");
+        System.out.println("1. Listar episódios");
+        System.out.println("2. Exibir melhores episódios");
+        System.out.println("3. Exibir piores episódios");
+        System.out.println("4. Voltar ao menu principal");
         System.out.print("Escolha uma opção: ");
         
         int escolha = scanner.nextInt();
@@ -77,22 +82,15 @@ public class Menus {
 
         switch (escolha) {
             case 1:
-                Titulo tituloSerie = new TituloFactory().fromSerie(serie, null);
-                System.out.println(tituloSerie);
+                System.out.println(serieAnalise.listarTodosEpisodios(serie.titulo()));
                 break;
             case 2:
-                funcoes.listarEpisodios(serie).forEach(System.out::println);
+                System.out.println(serieAnalise.melhoresEpisodios(serie, 5));
                 break;
             case 3:
-                funcoes.listarMelhoresEpisodios(serie);
+                System.out.println(serieAnalise.pioresEpisodios(serie, 5));
                 break;
             case 4:
-                funcoes.listarPioresEpisodios(serie);
-                break;
-            case 5:
-                funcoes.exibirEstatisticasSerie(serie);
-                break;
-            case 6:
                 System.out.println("Voltando ao menu principal...");
                 break;
             default:
