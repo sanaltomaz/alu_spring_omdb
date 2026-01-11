@@ -69,12 +69,6 @@ public class TituloService {
             );
         }
 
-        if (dados instanceof com.sanal.omdb.dto.omdb.OmdbEpisodioDto) {
-            return tituloFactory.fromEpisodio(
-                (com.sanal.omdb.dto.omdb.OmdbEpisodioDto) dados
-            );
-        }
-
         return null;
     }
 
