@@ -40,6 +40,10 @@ public class SerieAnaliseService {
         return tituloService.buscarSerieComEpisodios(nome);
     }
 
+    public OmdbSerieCompletaDto listarTodosEpisodios(String nome) {
+        return carregarSerieCompleta(nome);
+    }
+
     /**
      * Retorna os melhores episódios da série,
      * ordenados por avaliação (decrescente).
