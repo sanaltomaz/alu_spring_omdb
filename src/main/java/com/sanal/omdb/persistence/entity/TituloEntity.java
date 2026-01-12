@@ -69,10 +69,6 @@ public abstract class TituloEntity {
         return tipo;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
