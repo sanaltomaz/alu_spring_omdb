@@ -10,21 +10,21 @@ import com.sanal.omdb.persistence.mapper.EpisodioEntityMapper;
 import com.sanal.omdb.persistence.repository.EpisodioRepository;
 
 /**
- * Service responsável exclusivamente pela persistência de episódios.
+ * Service responsável pela persistência de episódios associados a séries.
  *
  * Responsabilidades:
- * - Persistir episódios associados a uma série existente
- * - Garantir vínculo correto entre episódio e série
+ * - Persistir episódios vinculados a uma série já existente
+ * - Garantir o relacionamento correto entre episódio e série
  *
  * NÃO faz:
- * - Busca na OMDB
- * - Criação de séries
- * - Análises ou estatísticas
- * - Decisão se episódio deve ou não existir
+ * - Busca de dados na OMDB
+ * - Criação ou atualização de séries
+ * - Decisão de fluxo ou regras de negócio
+ * - Análises ou processamento estatístico
  *
  * Observações:
- * - Série deve existir antes da persistência
- * - Métodos podem ser custosos (persistência em lote)
+ * - A série deve estar previamente persistida
+ * - A persistência pode envolver operações em lote e ser custosa
  */
 @Service
 public class EpisodioPersistenciaService {
@@ -47,31 +47,54 @@ public class EpisodioPersistenciaService {
      * - Série já persistida
      * - Temporada já carregada da OMDB
      *
+     * Observações:
+     * - Operação atômica por temporada
+     *
      * @param serie série persistida
      * @param temporadaDto dados da temporada
      */
     @Transactional
-    public void salvarEpisodiosTemporada(
+    void salvarEpisodiosTemporada(
         SerieEntity serie,
         OmdbTemporadaDto temporadaDto
     ) {
-        // Implementação será feita em etapa posterior
+        Integer numeroTemporada = temporadaDto.numeroTemporada();
+
+        if (temporadaDto.episodios() == null || temporadaDto.episodios().isEmpty()) {
+            return;
+        }
+
+        temporadaDto.episodios().forEach(episodioDto -> {
+            episodioRepository.save(
+                mapper.toEntity(
+                    episodioDto,
+                    serie,
+                    numeroTemporada
+                )
+            );
+        });
     }
 
     /**
      * Persiste todos os episódios de uma série completa.
      *
-     * Observação:
+     * Observações:
      * - Método potencialmente custoso
+     * - Não é uma operação transacional única; falhas ocorrem por temporada
      *
      * @param serie série persistida
      * @param serieCompletaDto dados completos da série
      */
-    @Transactional
     public void salvarTodosEpisodios(
         SerieEntity serie,
         OmdbSerieCompletaDto serieCompletaDto
     ) {
-        // Implementação será feita em etapa posterior
+        if (serieCompletaDto.temporadas() == null || serieCompletaDto.temporadas().isEmpty()) {
+            return;
+        }
+
+        serieCompletaDto.temporadas().forEach(temporadaDto -> {
+            salvarEpisodiosTemporada(serie, temporadaDto);
+        });
     }
 }
