@@ -41,7 +41,41 @@ public class EpisodioEntityMapper {
         SerieEntity serie,
         Integer numeroTemporada
     ) {
-        // Implementação será feita em etapa posterior
-        return new EpisodioEntity();
+        
+        if (episodioDto == null) {
+            throw new IllegalArgumentException("Dados de episódio não podem ser nulo");
+        }
+
+        if (serie == null) {
+            throw new IllegalArgumentException("Série não pode ser nula");
+        }
+
+        EpisodioEntity entity = new EpisodioEntity();
+        entity.setTitulo(episodioDto.titulo());
+        entity.setNumeroEpisodio(episodioDto.episodio());
+        entity.setNumeroTemporada(numeroTemporada);
+        entity.setAvaliacao(parseAvaliacao(episodioDto.avaliacao()));
+        entity.setSerie(serie); 
+
+        return entity;
     }
+
+    private Double parseAvaliacao(String avaliacao) {
+        if (avaliacao == null) {
+            return null;
+        }
+
+        String valor = avaliacao.trim();
+
+        if (valor.isEmpty() || valor.equalsIgnoreCase("N/A")) {
+            return null;
+        }
+
+        try {
+            return Double.parseDouble(valor);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
 }

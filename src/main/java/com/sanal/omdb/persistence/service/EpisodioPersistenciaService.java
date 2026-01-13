@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sanal.omdb.dto.omdb.OmdbSerieCompletaDto;
 import com.sanal.omdb.dto.omdb.OmdbTemporadaDto;
 import com.sanal.omdb.persistence.entity.SerieEntity;
+import com.sanal.omdb.persistence.mapper.EpisodioEntityMapper;
+import com.sanal.omdb.persistence.repository.EpisodioRepository;
 
 /**
  * Service responsável exclusivamente pela persistência de episódios.
@@ -26,6 +28,17 @@ import com.sanal.omdb.persistence.entity.SerieEntity;
  */
 @Service
 public class EpisodioPersistenciaService {
+
+    private final EpisodioRepository episodioRepository;
+    private final EpisodioEntityMapper mapper;
+
+    public EpisodioPersistenciaService(
+        EpisodioRepository episodioRepository,
+        EpisodioEntityMapper mapper
+    ) {
+        this.episodioRepository = episodioRepository;
+        this.mapper = mapper;
+    }
 
     /**
      * Persiste todos os episódios de uma temporada específica.
