@@ -1,7 +1,25 @@
 package com.sanal.omdb.persistence;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import com.sanal.omdb.dto.omdb.OmdbEpisodioDto;
+import com.sanal.omdb.dto.omdb.OmdbSerieCompletaDto;
+import com.sanal.omdb.dto.omdb.OmdbSerieDto;
+import com.sanal.omdb.dto.omdb.OmdbTemporadaDto;
+import com.sanal.omdb.models.TipoTitulo;
+import com.sanal.omdb.models.Titulo;
+import com.sanal.omdb.persistence.entity.SerieEntity;
+import com.sanal.omdb.persistence.repository.EpisodioRepository;
+import com.sanal.omdb.persistence.service.EpisodioPersistenciaService;
+import com.sanal.omdb.persistence.service.SeriePersistenciaService;
 
 /**
  * Teste de integração para {@code EpisodioPersistenciaService}.
@@ -19,7 +37,6 @@ import org.springframework.test.context.ActiveProfiles;
  * Escopo do que é testado:
  * - Persistência de episódios associados a uma série já persistida
  * - Persistência correta por temporada
- * - Rollback completo da temporada em caso de erro
  * - Manutenção de dados de temporadas anteriores em falhas subsequentes
  *
  * O que NÃO é testado aqui:
@@ -36,8 +53,66 @@ import org.springframework.test.context.ActiveProfiles;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-public class EpisodioPersistenciaServiceIT {
+class EpisodioPersistenciaServiceIT {
 
-    // Testes serão adicionados incrementalmente
+    @Autowired
+    private SeriePersistenciaService seriePersistenciaService;
 
+    @Autowired
+    private EpisodioPersistenciaService episodioPersistenciaService;
+
+    @Autowired
+    private EpisodioRepository episodioRepository;
+
+    @Test
+    void devePersistirEpisodiosDeUmaTemporadaComSucesso() {
+        // given - série persistida
+        Titulo tituloSerie = new Titulo(
+            TipoTitulo.SERIE,
+            "Breaking Bad",
+            null,
+            null,
+            null,
+            9.5,
+            null,
+            null
+        );
+
+        SerieEntity serie = seriePersistenciaService.salvarSerie(tituloSerie);
+
+        OmdbSerieDto serieDto = new OmdbSerieDto(
+            "series",
+            "Breaking Bad",
+            5,
+            "9.5",
+            "20 Jan 2008",
+            "A high school chemistry teacher turned methamphetamine producer..."
+        );
+
+        // e uma temporada válida
+        OmdbSerieCompletaDto serieCompletaDto = new OmdbSerieCompletaDto( 
+            serieDto,
+            List.of(
+                new OmdbTemporadaDto(
+                    1,
+                    List.of(
+                        new OmdbEpisodioDto("Pilot", 1, "8.9"),
+                        new OmdbEpisodioDto("Cat's in the Bag...", 2, "8.7")
+                    )
+                )
+            )
+        );
+
+        // when - persistimos os episódios da temporada
+        episodioPersistenciaService.salvarTodosEpisodios(serie, serieCompletaDto);
+
+        // then - efeitos reais no banco
+        assertEquals(2, episodioRepository.count(), "Deveriam existir dois episódios persistidos");
+
+        episodioRepository.findAll().forEach(episodio -> {
+            assertNotNull(episodio.getId(), "Episódio deveria ter ID");
+            assertEquals(1, episodio.getNumeroTemporada());
+            assertEquals(serie.getId(), episodio.getSerie().getId());
+        });
+    }
 }
