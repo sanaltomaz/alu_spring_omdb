@@ -2,6 +2,7 @@ package com.sanal.omdb.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,52 @@ public class FilmePersistenciaServiceIT {
         // then - validamos efeitos reais no banco
         assertNotNull(entity.getId(), "O filme deveria ter um ID gerado");
         assertEquals(1, filmeRepository.count(), "Deveria existir exatamente um filme persistido");
+    }
+
+    @Test
+    void deveFalharAoPersistirTituloQueNaoEhFilme() {
+        // given - título inválido para este service
+        Titulo titulo = new Titulo(
+            TipoTitulo.SERIE,
+            "Breaking Bad",
+            null,
+            null,
+            null,
+            9.5,
+            null,
+            null
+        );
+
+        // when / then - deve falhar
+        assertThrows(
+            IllegalStateException.class,
+            () -> filmePersistenciaService.salvarFilme(titulo),
+            "Persistir um título que não é FILME deve falhar"
+        );
+
+        // e nada deve ter sido persistido
+        assertEquals(
+            0,
+            filmeRepository.count(),
+            "Nenhum filme deve ser persistido após falha"
+        );
+    }
+
+    @Test
+    void deveFalharAoPersistirTituloNulo() {
+        // when / then
+        assertThrows(
+            NullPointerException.class,
+            () -> filmePersistenciaService.salvarFilme(null),
+            "Persistir um título nulo deve falhar"
+        );
+    
+        // e nada deve ter sido persistido
+        assertEquals(
+            0,
+            filmeRepository.count(),
+            "Nenhum filme deve ser persistido ao receber título nulo"
+        );
     }
 
 }
