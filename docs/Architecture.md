@@ -38,6 +38,12 @@ Motivações:
 * Facilitar substituição ou extensão futura da integração
 * Evitar contaminação do domínio com regras externas
 
+Observação adicional:
+
+* Tratamentos defensivos simples de dados externos (ex.: valores ausentes ou inválidos)
+  podem ocorrer em mappers de persistência, desde que não envolvam regras de negócio
+  ou decisões de fluxo.
+
 ---
 
 ## Domínio
@@ -129,7 +135,7 @@ Não fazem:
 
 Responsáveis por:
 
-* Persistir entidades já validadas e preparadas
+* Persistir entidades após validações de uso e integridade estrutural
 * Garantir a ordem correta de persistência
 * Controlar atomicidade e escopo transacional
 
