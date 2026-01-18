@@ -47,11 +47,7 @@ public class TituloEntityMapper {
      * @return entidade de filme pronta para persistência
      */
     @NonNull
-    public FilmeEntity toFilmeEntity(Titulo titulo) {
-
-        if (titulo == null) {
-            throw new IllegalArgumentException("Título não pode ser nulo");
-        }
+    public FilmeEntity toFilmeEntity(@NonNull Titulo titulo) {
 
         if (titulo.getTipo() != TipoTitulo.FILME) {
             throw new IllegalArgumentException("Título não é um filme");
@@ -83,12 +79,8 @@ public class TituloEntityMapper {
      * @return entidade de série pronta para persistência
      */
     @NonNull
-    public SerieEntity toSerieEntity(Titulo titulo) {
-
-        if (titulo == null) {
-            throw new IllegalArgumentException("Título não pode ser nulo");
-        }
-
+    public SerieEntity toSerieEntity(@NonNull Titulo titulo) {
+        
         if (titulo.getTipo() != TipoTitulo.SERIE) {
             throw new IllegalArgumentException("Título não é uma série");
         }

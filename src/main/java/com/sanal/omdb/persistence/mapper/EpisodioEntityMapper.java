@@ -18,7 +18,7 @@ import com.sanal.omdb.persistence.entity.SerieEntity;
  * - Persistência em banco
  * - Busca de série
  * - Decisão de fluxo
- * - Validação de regras de negócio
+ * - Validação de regras de negócio (apenas invariantes estruturais)
  *
  * Observações:
  * - Episódios sempre dependem de uma série existente
