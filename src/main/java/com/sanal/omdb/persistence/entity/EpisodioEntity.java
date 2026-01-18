@@ -25,17 +25,18 @@ public class EpisodioEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String titulo;
 
-    @Column(name = "numero_episodio")
+    @Column(name = "numero_episodio", nullable = false)
     private Integer numeroEpisodio;
 
-    @Column(name = "numero_temporada")
+    @Column(name = "numero_temporada", nullable = false)    
     private Integer numeroTemporada;
 
     private Double avaliacao;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "serie_id", nullable = false)
     private SerieEntity serie;
 

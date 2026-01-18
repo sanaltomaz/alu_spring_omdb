@@ -30,6 +30,7 @@ public abstract class TituloEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String titulo;
 
     private Double avaliacao;
@@ -40,6 +41,7 @@ public abstract class TituloEntity {
     private String sinopse;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TipoTitulo tipo;
 
     protected TituloEntity() {

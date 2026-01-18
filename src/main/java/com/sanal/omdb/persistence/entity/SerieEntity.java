@@ -19,7 +19,7 @@ import jakarta.persistence.Entity;
 @Entity
 public class SerieEntity extends TituloEntity {
 
-    @Column(name = "total_temporadas")
+    @Column(name = "total_temporadas", nullable = false)
     private Integer totalTemporadas;
 
     /**
