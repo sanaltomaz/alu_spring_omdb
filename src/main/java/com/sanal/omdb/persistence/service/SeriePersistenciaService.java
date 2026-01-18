@@ -25,9 +25,11 @@ import com.sanal.omdb.persistence.repository.SerieRepository;
  * - Lógica de negócio ou análise
  * - Decisão de fluxo da aplicação
  *
- * Observação:
- * Este service existe para manter a persistência desacoplada
- * do restante da aplicação e evitar sobrecarga no TituloService.
+ * Observações:
+ * - Método interno de suporte
+ * - Não deve ser chamado fora deste service
+ * - Executa dentro da transação do método chamador
+ * - Operação atômica por temporada
  */
 @Service
 public class SeriePersistenciaService {
@@ -62,9 +64,7 @@ public class SeriePersistenciaService {
     public @NonNull SerieEntity salvarSerie(@NonNull Titulo titulo) {
 
         if (titulo.getTipo() != TipoTitulo.SERIE) {
-            throw new IllegalStateException(
-                "Tentativa de persistir título que não é série"
-            );
+            throw new IllegalStateException("Tentativa de persistir título que não é série");
         }
 
         SerieEntity entity = mapper.toSerieEntity(titulo);
