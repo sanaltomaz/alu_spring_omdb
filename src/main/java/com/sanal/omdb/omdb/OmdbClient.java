@@ -29,6 +29,11 @@ import io.github.cdimascio.dotenv.Dotenv;
  * - Regras de negócio
  * - Lógica de análise
  * - Decisão de fluxo da aplicação
+ * 
+ *  * Limitações conhecidas:
+ * - Configuração via dotenv (a ser migrada para injeção de configuração)
+ * - Identificação de tipo baseada em inspeção de JSON bruto
+ * - HttpClient instanciado internamente
  */
 @Component
 public class OmdbClient {
