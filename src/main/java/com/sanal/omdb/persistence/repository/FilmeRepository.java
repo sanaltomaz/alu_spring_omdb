@@ -10,13 +10,9 @@ import com.sanal.omdb.persistence.entity.FilmeEntity;
  * Responsabilidade:
  * - Persistir e recuperar entidades FilmeEntity
  *
- * NÃO faz:
- * - Conversão entre domínio e entidade
- * - Regras de negócio
- * - Integração com APIs externas
- *
- * Observação:
- * - Utiliza as operações padrão do JpaRepository
+ * Observações:
+ * - Não contém regras de negócio
+ * - Utiliza apenas operações padrão do Spring Data JPA
  */
 public interface FilmeRepository extends JpaRepository<FilmeEntity, Long> {
 }

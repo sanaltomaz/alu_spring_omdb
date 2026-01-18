@@ -10,9 +10,9 @@ import com.sanal.omdb.persistence.entity.SerieEntity;
  * Responsabilidade:
  * - Persistir e recuperar entidades SerieEntity
  *
- * Observação:
- * - Não lida diretamente com episódios
- * - Relacionamentos são resolvidos via JPA
+ * Observações:
+ * - Não gerencia episódios
+ * - Operações de relacionamento são tratadas pelo JPA
  */
 public interface SerieRepository extends JpaRepository<SerieEntity, Long> {
 }

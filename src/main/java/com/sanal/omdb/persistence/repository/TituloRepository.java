@@ -5,14 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.sanal.omdb.persistence.entity.TituloEntity;
 
 /**
- * Repository base para consultas genéricas de títulos.
+ * Repository base para acesso a títulos persistidos.
  *
  * Responsabilidade:
- * - Oferecer acesso comum a entidades derivadas de TituloEntity
+ * - Fornecer acesso genérico a entidades derivadas de TituloEntity
  *
- * Observação:
- * - Não substitui repositories específicos (Filme, Série, Episódio)
- * - Uso principal: consultas genéricas ou futuras extensões
+ * Observações:
+ * - Não substitui repositories específicos (Filme, Série)
+ * - Uso previsto para consultas genéricas ou extensões futuras
  */
 public interface TituloRepository extends JpaRepository<TituloEntity, Long> {
 }
+

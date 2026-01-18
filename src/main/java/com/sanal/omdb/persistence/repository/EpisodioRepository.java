@@ -10,20 +10,20 @@ import com.sanal.omdb.persistence.entity.EpisodioEntity;
  * Repository responsável pela persistência de episódios.
  *
  * Responsabilidade:
- * - Persistir e consultar episódios vinculados a uma série
+ * - Persistir e consultar episódios associados a uma série
  *
  * Consultas suportadas:
  * - Buscar episódios por série
  * - Buscar episódios por série e temporada
  *
- * Observação:
+ * Observações:
  * - Relacionamento com Série é definido na entidade
- * - Não contém lógica de agregação ou análise
+ * - Não realiza agregações ou análises
  */
 public interface EpisodioRepository extends JpaRepository<EpisodioEntity, Long> {
-    
+
     List<EpisodioEntity> findBySerieId(Long serieId);
-    
+
     List<EpisodioEntity> findBySerieIdAndNumeroTemporada(
         Long serieId,
         Integer numeroTemporada
